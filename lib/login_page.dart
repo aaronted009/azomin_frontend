@@ -12,8 +12,8 @@ class LoginPage extends StatelessWidget{
     return Row(children: [
       Column(children: [
         Icon(Icons.house),
-        Image(image: AssetImage("images/login-image.png"),),
-      ],)
+        Image(image: AssetImage("images/login.png"),),
+      ],),
       Column(children: [
         Text("Log in"),
         TextField(decoration: InputDecoration(border: OutlineInputBorder(), hintText: "azomin@example.com"),),
