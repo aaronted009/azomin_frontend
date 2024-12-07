@@ -1,3 +1,4 @@
+import 'package:azomin_frontend/register_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -5,11 +6,11 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      body: _page(),
+      body: _page(context),
     );
   }
 
-  Widget _page() {
+  Widget _page(BuildContext context) {
     return Row(mainAxisSize: MainAxisSize.max, children: [
       Expanded(
         child: Column(
@@ -136,6 +137,28 @@ class LoginPage extends StatelessWidget {
                         child: const Text("Enter",
                             style: TextStyle(color: Colors.black)),
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Don't have an account?",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()),);
+                          },
+                          child: Text(
+                            "Register",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 ],
