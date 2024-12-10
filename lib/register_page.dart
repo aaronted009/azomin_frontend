@@ -256,7 +256,8 @@ Widget _register_page(BuildContext context) {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                MyTextWidget("Date of birth", 14, FontWeight.bold),
+                                MyTextWidget(
+                                    "Date of birth", 14, FontWeight.bold),
                                 SizedBox(
                                   width: 200,
                                   child: TextField(
@@ -272,6 +273,30 @@ Widget _register_page(BuildContext context) {
                           ),
                         ],
                       )),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MyTextWidget("Phone number", 14, FontWeight.bold),
+                            SizedBox(
+                              width: 400,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(top: 20.0),
                     child: SizedBox(
