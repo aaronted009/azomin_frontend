@@ -1,8 +1,16 @@
 import 'package:azomin_frontend/login_page.dart';
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  static const List<String> genders = ["Male", "Female"];
+  String genderInitialValue = genders.first;
 
   @override
   Widget build(BuildContext context) {
@@ -199,19 +207,35 @@ Widget _register_page(BuildContext context) {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Genre",
+                                  "Gender",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(
                                   width: 200,
-                                  child: TextField(
+                                  child: DropdownButtonFormField<String>(
+                                    value:
+                                        _RegisterPageState().genderInitialValue,
+                                    items: [
+                                      for (String gender
+                                          in _RegisterPageState.genders)
+                                        DropdownMenuItem(
+                                            value: gender,
+                                            child: Text("$gender"))
+                                    ],
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Colors.grey[200],
                                       border: InputBorder.none,
                                     ),
+                                    onChanged: (newValue) {
+                                      // setState(() {
+                                      //   value = newValue;
+                                      // });
+                                      // print(newValue);
+                                      // Handle dropdown change
+                                    },
                                   ),
                                 ),
                               ],
