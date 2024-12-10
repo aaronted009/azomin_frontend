@@ -47,11 +47,7 @@ Widget _register_page(BuildContext context) {
                         SizedBox(
                             width:
                                 8), // Add some spacing between the icon and text
-                        Text(
-                          "AZOMIN",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
+                        MyTextWidget("AZOMIN", 15, FontWeight.bold),
                       ],
                     ),
                   ),
