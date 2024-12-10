@@ -1,4 +1,5 @@
 import 'package:azomin_frontend/login_page.dart';
+import 'package:azomin_frontend/utils.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -11,6 +12,9 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   static const List<String> genders = ["Male", "Female"];
   String genderInitialValue = genders.first;
+
+  static const List<String> profiles = ["Student", "Teacher", "Tutor"];
+  String profileInitialValue = profiles.first;
 
   @override
   Widget build(BuildContext context) {
@@ -93,15 +97,45 @@ Widget _register_page(BuildContext context) {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(right: 5.0),
+                            child: MyTextWidget("Profile", 14, FontWeight.bold),
+                          ),
+                          SizedBox(
+                            width: 200,
+                            child: DropdownButtonFormField<String>(
+                              value: _RegisterPageState().profileInitialValue,
+                              items: [
+                                for (String profile
+                                    in _RegisterPageState.profiles)
+                                  DropdownMenuItem(
+                                      value: profile, child: Text("$profile"))
+                              ],
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (newValue) {
+                                // setState(() {
+                                //   value = newValue;
+                                // });
+                                // print(newValue);
+                                // Handle dropdown change
+                              },
+                            ),
+                          ),
+                        ],
+                      )),
+                  Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 5.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Firstname",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                MyTextWidget("Firstname", 14, FontWeight.bold),
                                 SizedBox(
                                   width: 200,
                                   child: TextField(
@@ -120,12 +154,7 @@ Widget _register_page(BuildContext context) {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Lastname",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                MyTextWidget("Lastname", 14, FontWeight.bold),
                                 SizedBox(
                                   width: 200,
                                   child: TextField(
@@ -151,12 +180,7 @@ Widget _register_page(BuildContext context) {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Email",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                MyTextWidget("Email", 14, FontWeight.bold),
                                 SizedBox(
                                   width: 200,
                                   child: TextField(
@@ -175,12 +199,7 @@ Widget _register_page(BuildContext context) {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Address",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                MyTextWidget("Address", 14, FontWeight.bold),
                                 SizedBox(
                                   width: 200,
                                   child: TextField(
@@ -206,12 +225,7 @@ Widget _register_page(BuildContext context) {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Gender",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                MyTextWidget("Gender", 14, FontWeight.bold),
                                 SizedBox(
                                   width: 200,
                                   child: DropdownButtonFormField<String>(
@@ -246,12 +260,7 @@ Widget _register_page(BuildContext context) {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Date of birth",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                MyTextWidget("Date of birth", 14, FontWeight.bold),
                                 SizedBox(
                                   width: 200,
                                   child: TextField(
@@ -302,11 +311,7 @@ Widget _register_page(BuildContext context) {
                                   builder: (context) => LoginPage()),
                             );
                           },
-                          child: Text(
-                            "Login",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
-                          ),
+                          child: MyTextWidget("Login", 14, FontWeight.bold),
                         ),
                       ],
                     ),
