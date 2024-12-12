@@ -14,18 +14,9 @@ class _RegisterPageState extends State<RegisterPage> {
   String genderInitialValue = genders.first;
 
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
-  String profileInitialValue = profiles.first;
+  String selectedProfile = profiles.first;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _register_page(context),
-    );
-  }
-}
-
-Widget _register_page(BuildContext context) {
-  var commonBaseFields = [
+  List<Widget> commonBaseFields = [
     Padding(
         padding: EdgeInsets.all(20.0),
         child: Row(
@@ -199,147 +190,265 @@ Widget _register_page(BuildContext context) {
       ),
     )
   ];
-  return Row(mainAxisSize: MainAxisSize.max, children: [
-    Expanded(
-      child: Column(
+
+  List<Widget> StudentSpecificFields = [
+    Padding(
+      padding: EdgeInsets.all(20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Container(
-              color: Color(0xffF2CECF),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 50, top: 20),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image(
-                          image: AssetImage("images/school-icon.png"),
-                          width: 24, // Adjust the width as needed
-                          height: 24, // Adjust the height as needed
-                        ),
-                        SizedBox(
-                            width:
-                                8), // Add some spacing between the icon and text
-                        MyTextWidget("AZOMIN", 15, FontWeight.bold),
-                      ],
-                    ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MyTextWidget("Classroom", 14, FontWeight.bold),
+              SizedBox(
+                width: 400,
+                child: TextField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: InputBorder.none,
                   ),
-                  Spacer(),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: EdgeInsets.only(
-                        bottom: 200), // Adjust the margin as needed
-                    child: Image(
-                      image: AssetImage("images/login.png"),
-                      width: 300, // Adjust the width as needed
-                      height: 300, // Adjust the height as needed
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    )
+  ];
+
+  List<Widget> StudentTutorSpecificFields = [
+    Padding(
+      padding: EdgeInsets.all(20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MyTextWidget("Student", 14, FontWeight.bold),
+              SizedBox(
+                width: 400,
+                child: TextField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: InputBorder.none,
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    )
+  ];
+  List<Widget> TeacherSpecificFields = [
+    Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: 5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MyTextWidget("Hire date", 14, FontWeight.bold),
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        border: InputBorder.none,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          )
-        ],
-      ),
-    ),
-    Expanded(
-        child: Container(
-            color: Color(0xffFFFFFF),
-            padding: EdgeInsets.all(16.0),
-            child: Center(
+            Padding(
+              padding: EdgeInsets.only(left: 5.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 30.0),
-                    child: Text(
-                      "Register",
-                      style:
-                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(right: 5.0),
-                            child: MyTextWidget("Profile", 14, FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 200,
-                            child: DropdownButtonFormField<String>(
-                              value: _RegisterPageState().profileInitialValue,
-                              items: [
-                                for (String profile
-                                    in _RegisterPageState.profiles)
-                                  DropdownMenuItem(
-                                      value: profile, child: Text("$profile"))
-                              ],
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: InputBorder.none,
-                              ),
-                              onChanged: (newValue) {
-                                // setState(() {
-                                //   value = newValue;
-                                // });
-                                // print(newValue);
-                                // Handle dropdown change
-                              },
-                            ),
-                          ),
-                        ],
-                      )),
-                  Column(
-                    children: commonBaseFields,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: SizedBox(
-                      width: 300,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Handle login action
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[200],
-                          minimumSize:
-                              Size(double.infinity, 50), // Set the height
-                        ),
-                        child: const Text("Sign up",
-                            style: TextStyle(color: Colors.black)),
+                  MyTextWidget("Qualification", 14, FontWeight.bold),
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        border: InputBorder.none,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Already have an account?",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()),
-                            );
-                          },
-                          child: MyTextWidget("Login", 14, FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  )
                 ],
               ),
-            )))
-  ]);
+            ),
+          ],
+        )),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (selectedProfile == "Student") {
+      commonBaseFields = commonBaseFields + StudentSpecificFields;
+    } else if (selectedProfile == "Teacher") {
+      commonBaseFields = commonBaseFields + TeacherSpecificFields;
+    } else if (selectedProfile == "Tutor") {
+      commonBaseFields = commonBaseFields + StudentTutorSpecificFields;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(mainAxisSize: MainAxisSize.max, children: [
+        Expanded(
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  color: Color(0xffF2CECF),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 50, top: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image(
+                              image: AssetImage("images/school-icon.png"),
+                              width: 24, // Adjust the width as needed
+                              height: 24, // Adjust the height as needed
+                            ),
+                            SizedBox(
+                                width:
+                                    8), // Add some spacing between the icon and text
+                            MyTextWidget("AZOMIN", 15, FontWeight.bold),
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: EdgeInsets.only(
+                            bottom: 200), // Adjust the margin as needed
+                        child: Image(
+                          image: AssetImage("images/login.png"),
+                          width: 300, // Adjust the width as needed
+                          height: 300, // Adjust the height as needed
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        Expanded(
+            child: Container(
+                color: Color(0xffFFFFFF),
+                padding: EdgeInsets.all(16.0),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 30.0),
+                        child: Text(
+                          "Register",
+                          style: TextStyle(
+                              fontSize: 40, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 5.0),
+                                child: MyTextWidget(
+                                    "Profile", 14, FontWeight.bold),
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: DropdownButtonFormField<String>(
+                                  value: selectedProfile,
+                                  items: [
+                                    for (String profile
+                                        in _RegisterPageState.profiles)
+                                      DropdownMenuItem(
+                                          value: profile,
+                                          child: Text("$profile"))
+                                  ],
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
+                                    border: InputBorder.none,
+                                  ),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedProfile = newValue!;
+                                    });
+                                    // print(newValue);
+                                  },
+                                ),
+                              ),
+                            ],
+                          )),
+                      Column(children: commonBaseFields),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: SizedBox(
+                          width: 300,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // Handle login action
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[200],
+                              minimumSize:
+                                  Size(double.infinity, 50), // Set the height
+                            ),
+                            child: const Text("Sign up",
+                                style: TextStyle(color: Colors.black)),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Already have an account?",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
+                              },
+                              child: MyTextWidget("Login", 14, FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )))
+      ]),
+    );
+  }
 }
