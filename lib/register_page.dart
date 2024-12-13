@@ -11,7 +11,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   static const List<String> genders = ["Male", "Female"];
-  String genderInitialValue = genders.first;
 
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
   String selectedProfile = profiles.first;
@@ -121,9 +120,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(
                     width: 200,
                     child: DropdownButtonFormField<String>(
-                      value: _RegisterPageState().genderInitialValue,
+                      value: genders.first,
                       items: [
-                        for (String gender in _RegisterPageState.genders)
+                        for (String gender in genders)
                           DropdownMenuItem(
                               value: gender, child: Text("$gender"))
                       ],
@@ -293,18 +292,6 @@ class _RegisterPageState extends State<RegisterPage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    if (selectedProfile == "Student") {
-      commonBaseFields = commonBaseFields + StudentSpecificFields;
-    } else if (selectedProfile == "Teacher") {
-      commonBaseFields = commonBaseFields + TeacherSpecificFields;
-    } else if (selectedProfile == "Tutor") {
-      commonBaseFields = commonBaseFields + StudentTutorSpecificFields;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(mainAxisSize: MainAxisSize.max, children: [
@@ -397,6 +384,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       selectedProfile = newValue!;
+                                      if (selectedProfile == "Student") {
+                                        commonBaseFields.removeWhere((field) => TeacherSpecificFields.contains(field) || StudentTutorSpecificFields.contains(field));
+                                        commonBaseFields += StudentSpecificFields;
+                                      } else if (selectedProfile == "Teacher") {
+                                        commonBaseFields.removeWhere((field) => StudentSpecificFields.contains(field) || StudentTutorSpecificFields.contains(field));
+                                        commonBaseFields +=
+                                            TeacherSpecificFields;
+                                      } else if (selectedProfile == "Tutor") {
+                                        commonBaseFields.removeWhere((field) => TeacherSpecificFields.contains(field) || StudentSpecificFields.contains(field));
+                                        commonBaseFields +=
+                                            StudentTutorSpecificFields;
+                                      }
                                     });
                                     // print(newValue);
                                   },
