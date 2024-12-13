@@ -292,6 +292,18 @@ class _RegisterPageState extends State<RegisterPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    if (selectedProfile == "Student") {
+      commonBaseFields += StudentSpecificFields;
+    } else if (selectedProfile == "Teacher") {
+      commonBaseFields += TeacherSpecificFields;
+    } else if (selectedProfile == "Tutor") {
+      commonBaseFields += StudentTutorSpecificFields;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(mainAxisSize: MainAxisSize.max, children: [
@@ -385,14 +397,27 @@ class _RegisterPageState extends State<RegisterPage> {
                                     setState(() {
                                       selectedProfile = newValue!;
                                       if (selectedProfile == "Student") {
-                                        commonBaseFields.removeWhere((field) => TeacherSpecificFields.contains(field) || StudentTutorSpecificFields.contains(field));
-                                        commonBaseFields += StudentSpecificFields;
+                                        commonBaseFields.removeWhere((field) =>
+                                            TeacherSpecificFields.contains(
+                                                field) ||
+                                            StudentTutorSpecificFields.contains(
+                                                field));
+                                        commonBaseFields +=
+                                            StudentSpecificFields;
                                       } else if (selectedProfile == "Teacher") {
-                                        commonBaseFields.removeWhere((field) => StudentSpecificFields.contains(field) || StudentTutorSpecificFields.contains(field));
+                                        commonBaseFields.removeWhere((field) =>
+                                            StudentSpecificFields.contains(
+                                                field) ||
+                                            StudentTutorSpecificFields.contains(
+                                                field));
                                         commonBaseFields +=
                                             TeacherSpecificFields;
                                       } else if (selectedProfile == "Tutor") {
-                                        commonBaseFields.removeWhere((field) => TeacherSpecificFields.contains(field) || StudentSpecificFields.contains(field));
+                                        commonBaseFields.removeWhere((field) =>
+                                            TeacherSpecificFields.contains(
+                                                field) ||
+                                            StudentSpecificFields.contains(
+                                                field));
                                         commonBaseFields +=
                                             StudentTutorSpecificFields;
                                       }
