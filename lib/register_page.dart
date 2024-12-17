@@ -1,6 +1,7 @@
 import 'package:azomin_frontend/login_page.dart';
 import 'package:azomin_frontend/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -349,13 +350,30 @@ class _RegisterPageState extends State<RegisterPage> {
         )),
   ];
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // If the form is valid, display a snackbar. In the real world,
-      // you'd often call a server or save the information in a database.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Data')),
-      );
+      if (selectedProfile == "Teacher") {
+        String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
+        try {
+          var response = await http.post(Uri.parse(registerTeacherUrl), body: {
+            "firstName": _firstnameController.text,
+            "lastName": _lastnameController.text,
+            "dateOfBirth": _dateOfBirthController.text,
+            "gender": "Male",
+            "address": _addressController.text,
+            "phoneNumber": _phoneNumberController.text,
+            "email": _emailController.text,
+            "id": 0,
+            "hireDate": _hireDateController.text,
+            "qualification": _qualificationController.text,
+            "salary": "0"
+          });
+          print(response.reasonPhrase);
+          print(response.statusCode);
+        } catch (e) {
+          print(e);
+        }
+      }
     }
   }
 
