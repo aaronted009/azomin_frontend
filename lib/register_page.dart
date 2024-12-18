@@ -2,6 +2,7 @@ import 'package:azomin_frontend/login_page.dart';
 import 'package:azomin_frontend/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -354,8 +355,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate()) {
       if (selectedProfile == "Teacher") {
         String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
-        try {
-          var response = await http.post(Uri.parse(registerTeacherUrl), body: {
+        var data = {
             "firstName": _firstnameController.text,
             "lastName": _lastnameController.text,
             "dateOfBirth": _dateOfBirthController.text,
@@ -363,11 +363,13 @@ class _RegisterPageState extends State<RegisterPage> {
             "address": _addressController.text,
             "phoneNumber": _phoneNumberController.text,
             "email": _emailController.text,
-            "id": 0,
+            // "id": 0,
             "hireDate": _hireDateController.text,
             "qualification": _qualificationController.text,
-            "salary": "0"
-          });
+            "salary": 0
+          };
+        try {
+          var response = await http.post(Uri.parse(registerTeacherUrl), headers: {'content-type': 'application/json'}, body: json.encode(data) );
           print(response.reasonPhrase);
           print(response.statusCode);
         } catch (e) {
