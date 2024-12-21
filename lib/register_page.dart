@@ -17,7 +17,6 @@ class _RegisterPageState extends State<RegisterPage> {
   static final _lastnameController = TextEditingController();
   static final _emailController = TextEditingController();
   static final _addressController = TextEditingController();
-  static final _genderController = TextEditingController();
   static final _dateOfBirthController = TextEditingController();
   static final _phoneNumberController = TextEditingController();
   static final _classroomController = TextEditingController();
@@ -163,14 +162,12 @@ class _RegisterPageState extends State<RegisterPage> {
           "firstName": _firstnameController.text,
           "lastName": _lastnameController.text,
           "dateOfBirth": _dateOfBirthController.text,
-          "gender": "Male",
+          "gender": _selectedGender,
           "address": _addressController.text,
           "phoneNumber": _phoneNumberController.text,
           "email": _emailController.text,
-          // "id": 0,
           "hireDate": _hireDateController.text,
           "qualification": _qualificationController.text,
-          "salary": 0
         };
         try {
           var response = await http.post(Uri.parse(registerTeacherUrl),
@@ -192,7 +189,6 @@ class _RegisterPageState extends State<RegisterPage> {
     _lastnameController.dispose();
     _emailController.dispose();
     _addressController.dispose();
-    _genderController.dispose();
     _dateOfBirthController.dispose();
     _phoneNumberController.dispose();
     _classroomController.dispose();
