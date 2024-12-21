@@ -25,220 +25,24 @@ class _RegisterPageState extends State<RegisterPage> {
   static final _qualificationController = TextEditingController();
   static final _studentController = TextEditingController();
   static const List<String> genders = ["Male", "Female"];
+  String? _selectedGender = genders.first;
 
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
   String selectedProfile = profiles.first;
 
-  List<Widget> commonBaseFields = [
-    Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyTextWidget("Firstname", 14, FontWeight.bold),
-                  SizedBox(
-                    width: 200,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please provide your first name';
-                        }
-                        return null;
-                      },
-                      controller: _firstnameController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyTextWidget("Lastname", 14, FontWeight.bold),
-                  SizedBox(
-                    width: 200,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please provide your last name';
-                        }
-                        return null;
-                      },
-                      controller: _lastnameController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )),
-    Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyTextWidget("Email", 14, FontWeight.bold),
-                  SizedBox(
-                    width: 200,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your mail';
-                        }
-                        return null;
-                      },
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyTextWidget("Address", 14, FontWeight.bold),
-                  SizedBox(
-                    width: 200,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your address';
-                        }
-                        return null;
-                      },
-                      controller: _addressController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )),
-    Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyTextWidget("Gender", 14, FontWeight.bold),
-                  SizedBox(
-                    width: 200,
-                    child: DropdownButtonFormField<String>(
-                      value: genders.first,
-                      items: [
-                        for (String gender in genders)
-                          DropdownMenuItem(
-                              value: gender, child: Text("$gender"))
-                      ],
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: InputBorder.none,
-                      ),
-                      onChanged: (newValue) {
-                        // setState(() {
-                        //   value = newValue;
-                        // });
-                        // print(newValue);
-                        // Handle dropdown change
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyTextWidget("Date of birth", 14, FontWeight.bold),
-                  SizedBox(
-                    width: 200,
-                    child: TextFormField(
-                      controller: _dateOfBirthController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )),
-    Padding(
-      padding: EdgeInsets.all(20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MyTextWidget("Phone number", 14, FontWeight.bold),
-              SizedBox(
-                width: 400,
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
-                    }
-                    return null;
-                  },
-                  controller: _phoneNumberController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: InputBorder.none,
-                  ),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    )
-  ];
+  @override
+  void initState() {
+    super.initState();
+    if (selectedProfile == "Student") {
+      correspondingFields= StudentSpecificFields;
+    } else if (selectedProfile == "Teacher") {
+      correspondingFields= TeacherSpecificFields;
+    } else if (selectedProfile == "Tutor") {
+      correspondingFields= StudentTutorSpecificFields;
+    }
+  }
+
+  List<Widget> correspondingFields = [];
 
   List<Widget> StudentSpecificFields = [
     Padding(
@@ -356,38 +160,28 @@ class _RegisterPageState extends State<RegisterPage> {
       if (selectedProfile == "Teacher") {
         String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
         var data = {
-            "firstName": _firstnameController.text,
-            "lastName": _lastnameController.text,
-            "dateOfBirth": _dateOfBirthController.text,
-            "gender": "Male",
-            "address": _addressController.text,
-            "phoneNumber": _phoneNumberController.text,
-            "email": _emailController.text,
-            // "id": 0,
-            "hireDate": _hireDateController.text,
-            "qualification": _qualificationController.text,
-            "salary": 0
-          };
+          "firstName": _firstnameController.text,
+          "lastName": _lastnameController.text,
+          "dateOfBirth": _dateOfBirthController.text,
+          "gender": "Male",
+          "address": _addressController.text,
+          "phoneNumber": _phoneNumberController.text,
+          "email": _emailController.text,
+          // "id": 0,
+          "hireDate": _hireDateController.text,
+          "qualification": _qualificationController.text,
+          "salary": 0
+        };
         try {
-          var response = await http.post(Uri.parse(registerTeacherUrl), headers: {'content-type': 'application/json'}, body: json.encode(data) );
+          var response = await http.post(Uri.parse(registerTeacherUrl),
+              headers: {'content-type': 'application/json'},
+              body: json.encode(data));
           print(response.reasonPhrase);
           print(response.statusCode);
         } catch (e) {
           print(e);
         }
       }
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (selectedProfile == "Student") {
-      commonBaseFields += StudentSpecificFields;
-    } else if (selectedProfile == "Teacher") {
-      commonBaseFields += TeacherSpecificFields;
-    } else if (selectedProfile == "Tutor") {
-      commonBaseFields += StudentTutorSpecificFields;
     }
   }
 
@@ -508,43 +302,264 @@ class _RegisterPageState extends State<RegisterPage> {
                                               selectedProfile = newValue!;
                                               if (selectedProfile ==
                                                   "Student") {
-                                                commonBaseFields.removeWhere(
-                                                    (field) =>
-                                                        TeacherSpecificFields
-                                                            .contains(field) ||
-                                                        StudentTutorSpecificFields
-                                                            .contains(field));
-                                                commonBaseFields +=
+                                                correspondingFields =
                                                     StudentSpecificFields;
                                               } else if (selectedProfile ==
                                                   "Teacher") {
-                                                commonBaseFields.removeWhere(
-                                                    (field) =>
-                                                        StudentSpecificFields
-                                                            .contains(field) ||
-                                                        StudentTutorSpecificFields
-                                                            .contains(field));
-                                                commonBaseFields +=
+                                                correspondingFields =
                                                     TeacherSpecificFields;
                                               } else if (selectedProfile ==
                                                   "Tutor") {
-                                                commonBaseFields.removeWhere(
-                                                    (field) =>
-                                                        TeacherSpecificFields
-                                                            .contains(field) ||
-                                                        StudentSpecificFields
-                                                            .contains(field));
-                                                commonBaseFields +=
+                                                correspondingFields =
                                                     StudentTutorSpecificFields;
                                               }
                                             });
-                                            // print(newValue);
                                           },
                                         ),
                                       ),
                                     ],
                                   )),
-                              Column(children: commonBaseFields),
+                              Column(children: [
+                                Padding(
+                                    padding: EdgeInsets.all(20.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 5.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyTextWidget("Firstname", 14,
+                                                  FontWeight.bold),
+                                              SizedBox(
+                                                width: 200,
+                                                child: TextFormField(
+                                                  validator: (value) {
+                                                    if (value == null ||
+                                                        value.isEmpty) {
+                                                      return 'Please provide your first name';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  controller:
+                                                      _firstnameController,
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.grey[200],
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyTextWidget("Lastname", 14,
+                                                  FontWeight.bold),
+                                              SizedBox(
+                                                width: 200,
+                                                child: TextFormField(
+                                                  validator: (value) {
+                                                    if (value == null ||
+                                                        value.isEmpty) {
+                                                      return 'Please provide your last name';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  controller:
+                                                      _lastnameController,
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.grey[200],
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                Padding(
+                                    padding: EdgeInsets.all(20.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 5.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyTextWidget(
+                                                  "Email", 14, FontWeight.bold),
+                                              SizedBox(
+                                                width: 200,
+                                                child: TextFormField(
+                                                  validator: (value) {
+                                                    if (value == null ||
+                                                        value.isEmpty) {
+                                                      return 'Please enter your mail';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  controller: _emailController,
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.grey[200],
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyTextWidget("Address", 14,
+                                                  FontWeight.bold),
+                                              SizedBox(
+                                                width: 200,
+                                                child: TextFormField(
+                                                  validator: (value) {
+                                                    if (value == null ||
+                                                        value.isEmpty) {
+                                                      return 'Please enter your address';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  controller:
+                                                      _addressController,
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.grey[200],
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                Padding(
+                                    padding: EdgeInsets.all(20.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 5.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyTextWidget("Gender", 14,
+                                                  FontWeight.bold),
+                                              SizedBox(
+                                                width: 200,
+                                                child: DropdownButtonFormField<
+                                                    String>(
+                                                  value: _selectedGender,
+                                                  items: [
+                                                    for (String gender
+                                                        in genders)
+                                                      DropdownMenuItem(
+                                                          value: gender,
+                                                          child:
+                                                              Text("$gender"))
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.grey[200],
+                                                    border: InputBorder.none,
+                                                  ),
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      _selectedGender =
+                                                          newValue;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyTextWidget("Date of birth", 14,
+                                                  FontWeight.bold),
+                                              SizedBox(
+                                                width: 200,
+                                                child: TextFormField(
+                                                  controller:
+                                                      _dateOfBirthController,
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.grey[200],
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                Padding(
+                                  padding: EdgeInsets.all(20.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          MyTextWidget("Phone number", 14,
+                                              FontWeight.bold),
+                                          SizedBox(
+                                            width: 400,
+                                            child: TextFormField(
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.isEmpty) {
+                                                  return 'Please enter your phone number';
+                                                }
+                                                return null;
+                                              },
+                                              controller:
+                                                  _phoneNumberController,
+                                              decoration: InputDecoration(
+                                                filled: true,
+                                                fillColor: Colors.grey[200],
+                                                border: InputBorder.none,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                ...correspondingFields,
+                              ]),
                               Padding(
                                 padding: EdgeInsets.only(top: 20.0),
                                 child: SizedBox(
