@@ -1,6 +1,8 @@
 import 'package:azomin_frontend/login_page.dart';
 import 'package:azomin_frontend/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -10,6 +12,18 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final _firstnameController = TextEditingController();
+  static final _lastnameController = TextEditingController();
+  static final _emailController = TextEditingController();
+  static final _addressController = TextEditingController();
+  static final _genderController = TextEditingController();
+  static final _dateOfBirthController = TextEditingController();
+  static final _phoneNumberController = TextEditingController();
+  static final _classroomController = TextEditingController();
+  static final _hireDateController = TextEditingController();
+  static final _qualificationController = TextEditingController();
+  static final _studentController = TextEditingController();
   static const List<String> genders = ["Male", "Female"];
 
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
@@ -29,7 +43,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextWidget("Firstname", 14, FontWeight.bold),
                   SizedBox(
                     width: 200,
-                    child: TextField(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please provide your first name';
+                        }
+                        return null;
+                      },
+                      controller: _firstnameController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -48,7 +69,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextWidget("Lastname", 14, FontWeight.bold),
                   SizedBox(
                     width: 200,
-                    child: TextField(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please provide your last name';
+                        }
+                        return null;
+                      },
+                      controller: _lastnameController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -74,7 +102,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextWidget("Email", 14, FontWeight.bold),
                   SizedBox(
                     width: 200,
-                    child: TextField(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your mail';
+                        }
+                        return null;
+                      },
+                      controller: _emailController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -93,7 +128,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextWidget("Address", 14, FontWeight.bold),
                   SizedBox(
                     width: 200,
-                    child: TextField(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your address';
+                        }
+                        return null;
+                      },
+                      controller: _addressController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -151,7 +193,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextWidget("Date of birth", 14, FontWeight.bold),
                   SizedBox(
                     width: 200,
-                    child: TextField(
+                    child: TextFormField(
+                      controller: _dateOfBirthController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -175,7 +218,14 @@ class _RegisterPageState extends State<RegisterPage> {
               MyTextWidget("Phone number", 14, FontWeight.bold),
               SizedBox(
                 width: 400,
-                child: TextField(
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    return null;
+                  },
+                  controller: _phoneNumberController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[200],
@@ -202,7 +252,8 @@ class _RegisterPageState extends State<RegisterPage> {
               MyTextWidget("Classroom", 14, FontWeight.bold),
               SizedBox(
                 width: 400,
-                child: TextField(
+                child: TextFormField(
+                  controller: _classroomController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[200],
@@ -229,7 +280,8 @@ class _RegisterPageState extends State<RegisterPage> {
               MyTextWidget("Student", 14, FontWeight.bold),
               SizedBox(
                 width: 400,
-                child: TextField(
+                child: TextFormField(
+                  controller: _studentController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[200],
@@ -257,7 +309,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextWidget("Hire date", 14, FontWeight.bold),
                   SizedBox(
                     width: 200,
-                    child: TextField(
+                    child: TextFormField(
+                      controller: _hireDateController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -276,7 +329,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   MyTextWidget("Qualification", 14, FontWeight.bold),
                   SizedBox(
                     width: 200,
-                    child: TextField(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the qualification';
+                        }
+                        return null;
+                      },
+                      controller: _qualificationController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey[200],
@@ -291,6 +351,34 @@ class _RegisterPageState extends State<RegisterPage> {
         )),
   ];
 
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      if (selectedProfile == "Teacher") {
+        String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
+        var data = {
+            "firstName": _firstnameController.text,
+            "lastName": _lastnameController.text,
+            "dateOfBirth": _dateOfBirthController.text,
+            "gender": "Male",
+            "address": _addressController.text,
+            "phoneNumber": _phoneNumberController.text,
+            "email": _emailController.text,
+            // "id": 0,
+            "hireDate": _hireDateController.text,
+            "qualification": _qualificationController.text,
+            "salary": 0
+          };
+        try {
+          var response = await http.post(Uri.parse(registerTeacherUrl), headers: {'content-type': 'application/json'}, body: json.encode(data) );
+          print(response.reasonPhrase);
+          print(response.statusCode);
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -301,6 +389,23 @@ class _RegisterPageState extends State<RegisterPage> {
     } else if (selectedProfile == "Tutor") {
       commonBaseFields += StudentTutorSpecificFields;
     }
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _emailController.dispose();
+    _addressController.dispose();
+    _genderController.dispose();
+    _dateOfBirthController.dispose();
+    _phoneNumberController.dispose();
+    _classroomController.dispose();
+    _hireDateController.dispose();
+    _qualificationController.dispose();
+    _studentController.dispose();
+    super.dispose();
   }
 
   @override
@@ -359,116 +464,129 @@ class _RegisterPageState extends State<RegisterPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 30.0),
-                        child: Text(
-                          "Register",
-                          style: TextStyle(
-                              fontSize: 40, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      Form(
+                          key: _formKey,
+                          child: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(right: 5.0),
-                                child: MyTextWidget(
-                                    "Profile", 14, FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 200,
-                                child: DropdownButtonFormField<String>(
-                                  value: selectedProfile,
-                                  items: [
-                                    for (String profile
-                                        in _RegisterPageState.profiles)
-                                      DropdownMenuItem(
-                                          value: profile,
-                                          child: Text("$profile"))
-                                  ],
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
-                                    border: InputBorder.none,
-                                  ),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedProfile = newValue!;
-                                      if (selectedProfile == "Student") {
-                                        commonBaseFields.removeWhere((field) =>
-                                            TeacherSpecificFields.contains(
-                                                field) ||
-                                            StudentTutorSpecificFields.contains(
-                                                field));
-                                        commonBaseFields +=
-                                            StudentSpecificFields;
-                                      } else if (selectedProfile == "Teacher") {
-                                        commonBaseFields.removeWhere((field) =>
-                                            StudentSpecificFields.contains(
-                                                field) ||
-                                            StudentTutorSpecificFields.contains(
-                                                field));
-                                        commonBaseFields +=
-                                            TeacherSpecificFields;
-                                      } else if (selectedProfile == "Tutor") {
-                                        commonBaseFields.removeWhere((field) =>
-                                            TeacherSpecificFields.contains(
-                                                field) ||
-                                            StudentSpecificFields.contains(
-                                                field));
-                                        commonBaseFields +=
-                                            StudentTutorSpecificFields;
-                                      }
-                                    });
-                                    // print(newValue);
-                                  },
+                                padding: EdgeInsets.only(bottom: 30.0),
+                                child: Text(
+                                  "Register",
+                                  style: TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
+                              Padding(
+                                  padding: EdgeInsets.all(20.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 5.0),
+                                        child: MyTextWidget(
+                                            "Profile", 14, FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        width: 200,
+                                        child: DropdownButtonFormField<String>(
+                                          value: selectedProfile,
+                                          items: [
+                                            for (String profile
+                                                in _RegisterPageState.profiles)
+                                              DropdownMenuItem(
+                                                  value: profile,
+                                                  child: Text("$profile"))
+                                          ],
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.grey[200],
+                                            border: InputBorder.none,
+                                          ),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              selectedProfile = newValue!;
+                                              if (selectedProfile ==
+                                                  "Student") {
+                                                commonBaseFields.removeWhere(
+                                                    (field) =>
+                                                        TeacherSpecificFields
+                                                            .contains(field) ||
+                                                        StudentTutorSpecificFields
+                                                            .contains(field));
+                                                commonBaseFields +=
+                                                    StudentSpecificFields;
+                                              } else if (selectedProfile ==
+                                                  "Teacher") {
+                                                commonBaseFields.removeWhere(
+                                                    (field) =>
+                                                        StudentSpecificFields
+                                                            .contains(field) ||
+                                                        StudentTutorSpecificFields
+                                                            .contains(field));
+                                                commonBaseFields +=
+                                                    TeacherSpecificFields;
+                                              } else if (selectedProfile ==
+                                                  "Tutor") {
+                                                commonBaseFields.removeWhere(
+                                                    (field) =>
+                                                        TeacherSpecificFields
+                                                            .contains(field) ||
+                                                        StudentSpecificFields
+                                                            .contains(field));
+                                                commonBaseFields +=
+                                                    StudentTutorSpecificFields;
+                                              }
+                                            });
+                                            // print(newValue);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                              Column(children: commonBaseFields),
+                              Padding(
+                                padding: EdgeInsets.only(top: 20.0),
+                                child: SizedBox(
+                                  width: 300,
+                                  child: ElevatedButton(
+                                    onPressed: _submitForm,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey[200],
+                                      minimumSize: Size(double.infinity,
+                                          50), // Set the height
+                                    ),
+                                    child: const Text("Sign up",
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Already have an account?",
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                        );
+                                      },
+                                      child: MyTextWidget(
+                                          "Login", 14, FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           )),
-                      Column(children: commonBaseFields),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20.0),
-                        child: SizedBox(
-                          width: 300,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Handle login action
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[200],
-                              minimumSize:
-                                  Size(double.infinity, 50), // Set the height
-                            ),
-                            child: const Text("Sign up",
-                                style: TextStyle(color: Colors.black)),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Already have an account?",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()),
-                                );
-                              },
-                              child: MyTextWidget("Login", 14, FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      )
                     ],
                   ),
                 )))
