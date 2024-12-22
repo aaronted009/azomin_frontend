@@ -158,15 +158,18 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate()) {
       if (selectedProfile == "Teacher") {
         String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
+        // Handle date format variables
+        var dateOfBirth = _dateOfBirthController.text == "" ? null : _dateOfBirthController.text;
+        var hireDate = _hireDateController.text == "" ? null : _hireDateController.text;
         var data = {
           "firstName": _firstnameController.text,
           "lastName": _lastnameController.text,
-          "dateOfBirth": _dateOfBirthController.text,
+          "dateOfBirth": dateOfBirth,
           "gender": _selectedGender,
           "address": _addressController.text,
           "phoneNumber": _phoneNumberController.text,
           "email": _emailController.text,
-          "hireDate": _hireDateController.text,
+          "hireDate": hireDate,
           "qualification": _qualificationController.text,
         };
         try {
