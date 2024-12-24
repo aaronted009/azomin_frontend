@@ -33,11 +33,11 @@ class _RegisterPageState extends State<RegisterPage> {
   void initState() {
     super.initState();
     if (selectedProfile == "Student") {
-      correspondingFields= StudentSpecificFields;
+      correspondingFields = StudentSpecificFields;
     } else if (selectedProfile == "Teacher") {
-      correspondingFields= TeacherSpecificFields;
+      correspondingFields = TeacherSpecificFields;
     } else if (selectedProfile == "Tutor") {
-      correspondingFields= StudentTutorSpecificFields;
+      correspondingFields = StudentTutorSpecificFields;
     }
   }
 
@@ -156,11 +156,35 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      if (selectedProfile == "Teacher") {
+      // Handle date format variables
+      var hireDate =
+          _hireDateController.text == "" ? null : _hireDateController.text;
+      var dateOfBirth = _dateOfBirthController.text == ""
+          ? null
+          : _dateOfBirthController.text;
+      if (selectedProfile == "Student") {
+        String registerStudentUrl = "http://127.0.0.1:8000/students/";
+        var data = {
+          "firstName": _firstnameController.text,
+          "lastName": _lastnameController.text,
+          "dateOfBirth": dateOfBirth,
+          "gender": _selectedGender,
+          "address": _addressController.text,
+          "phoneNumber": _phoneNumberController.text,
+          "email": _emailController.text,
+          "classroom": _classroomController.text
+        };
+        try {
+          var response = await http.post(Uri.parse(registerStudentUrl),
+              headers: {'content-type': 'application/json'},
+              body: json.encode(data));
+          print(response.reasonPhrase);
+          print(response.statusCode);
+        } catch (e) {
+          print(e);
+        }
+      } else if (selectedProfile == "Teacher") {
         String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
-        // Handle date format variables
-        var dateOfBirth = _dateOfBirthController.text == "" ? null : _dateOfBirthController.text;
-        var hireDate = _hireDateController.text == "" ? null : _hireDateController.text;
         var data = {
           "firstName": _firstnameController.text,
           "lastName": _lastnameController.text,
@@ -174,6 +198,27 @@ class _RegisterPageState extends State<RegisterPage> {
         };
         try {
           var response = await http.post(Uri.parse(registerTeacherUrl),
+              headers: {'content-type': 'application/json'},
+              body: json.encode(data));
+          print(response.reasonPhrase);
+          print(response.statusCode);
+        } catch (e) {
+          print(e);
+        }
+      } else if (selectedProfile == "Tutor") {
+        String registerTutorUrl = "http://127.0.0.1:8000/student_tutors/";
+        var data = {
+          "firstName": _firstnameController.text,
+          "lastName": _lastnameController.text,
+          "dateOfBirth": dateOfBirth,
+          "gender": _selectedGender,
+          "address": _addressController.text,
+          "phoneNumber": _phoneNumberController.text,
+          "email": _emailController.text,
+          "student": _studentController.text,
+        };
+        try {
+          var response = await http.post(Uri.parse(registerTutorUrl),
               headers: {'content-type': 'application/json'},
               body: json.encode(data));
           print(response.reasonPhrase);
