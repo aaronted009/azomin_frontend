@@ -1,3 +1,4 @@
+import 'package:azomin_frontend/add_classroom.dart';
 import 'package:azomin_frontend/login_page.dart';
 import 'package:azomin_frontend/utils.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +29,15 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _selectedGender = genders.first;
 
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
-  String selectedProfile = profiles.first;
+  String selectedProfile = profiles.elementAt(1);
 
   @override
   void initState() {
     super.initState();
-    if (selectedProfile == "Student") {
-      correspondingFields = StudentSpecificFields;
-    } else if (selectedProfile == "Teacher") {
+    // if (selectedProfile == "Student") {
+    //   correspondingFields = StudentSpecificFields;
+    // } else 
+    if (selectedProfile == "Teacher") {
       correspondingFields = TeacherSpecificFields;
     } else if (selectedProfile == "Tutor") {
       correspondingFields = StudentTutorSpecificFields;
@@ -44,39 +46,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
   List<Widget> correspondingFields = [];
 
-  List<Widget> StudentSpecificFields = [
-    Padding(
-      padding: EdgeInsets.all(20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MyTextWidget("Classroom", 14, FontWeight.bold),
-              SizedBox(
-                width: 400,
-                child: TextFormField(
-                  controller: _classroomController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Get.to(() => LoginPage());
-                },
-                child: MyTextWidget("Add", 14, FontWeight.bold),
-              ),
-            ],
-          )
-        ],
-      ),
-    )
-  ];
+  Future fetchClassrooms() async {
+    var classrooms = [];
+    try {
+      var response =
+          await http.get(Uri.parse("http://127.0.0.1:8000/classrooms/"));
+      classrooms = json.decode(response.body);
+    } catch (e) {
+      print(e);
+    }
+    return classrooms;
+  }
+
+  String? selectedClassroom;
 
   List<Widget> StudentTutorSpecificFields = [
     Padding(
@@ -255,6 +237,81 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> StudentSpecificFields = [
+      Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MyTextWidget("Classroom", 14, FontWeight.bold),
+                FutureBuilder(
+                  future: fetchClassrooms(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      var classrooms = snapshot.data as List;
+                      return SizedBox(
+                        width: 400,
+                        child: DropdownButtonFormField<String>(
+                          value: selectedClassroom,
+                          items: classrooms
+                              .map<DropdownMenuItem<String>>((classroom) {
+                            return DropdownMenuItem<String>(
+                              value: classroom['id'].toString(),
+                              child: Text(classroom['className']),
+                            );
+                          }).toList(),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedClassroom = newValue!;
+                            });
+                          },
+                        ),
+                      );
+                    }
+                  },
+                ),
+                // SizedBox(
+                //   width: 200,
+                //   child: DropdownButtonFormField<String>(
+                //     value: selectedClassroom,
+                //     items: [
+                //       for (String profile in _RegisterPageState.profiles)
+                //         DropdownMenuItem(value: profile, child: Text("$profile"))
+                //     ],
+                //     decoration: InputDecoration(
+                //       filled: true,
+                //       fillColor: Colors.grey[200],
+                //       border: InputBorder.none,
+                //     ),
+                //     onChanged: (String? newValue) {
+                //       // setState();
+                //     },
+                //   ),
+                // ),
+                TextButton(
+                  onPressed: () {
+                    Get.to(() => Classroom());
+                  },
+                  child: MyTextWidget("Add", 14, FontWeight.bold),
+                ),
+              ],
+            )
+          ],
+        ),
+      )
+    ];
     return GetMaterialApp(
       home: Scaffold(
         body: Row(mainAxisSize: MainAxisSize.max, children: [
