@@ -168,6 +168,9 @@ class _RegisterPageState extends State<RegisterPage> {
               body: json.encode(data));
           print(response.reasonPhrase);
           print(response.statusCode);
+          if (response.statusCode == 200) {
+            _formKey.currentState!.reset();
+          }
         } catch (e) {
           print(e);
         }
@@ -190,6 +193,9 @@ class _RegisterPageState extends State<RegisterPage> {
               body: json.encode(data));
           print(response.reasonPhrase);
           print(response.statusCode);
+          if (response.statusCode == 200) {
+            _formKey.currentState!.reset();
+          }
         } catch (e) {
           print(e);
         }
@@ -211,6 +217,9 @@ class _RegisterPageState extends State<RegisterPage> {
               body: json.encode(data));
           print(response.reasonPhrase);
           print(response.statusCode);
+          if (response.statusCode == 200) {
+            _formKey.currentState!.reset();
+          }
         } catch (e) {
           print(e);
         }
@@ -281,24 +290,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
                   },
                 ),
-                // SizedBox(
-                //   width: 200,
-                //   child: DropdownButtonFormField<String>(
-                //     value: selectedClassroom,
-                //     items: [
-                //       for (String profile in _RegisterPageState.profiles)
-                //         DropdownMenuItem(value: profile, child: Text("$profile"))
-                //     ],
-                //     decoration: InputDecoration(
-                //       filled: true,
-                //       fillColor: Colors.grey[200],
-                //       border: InputBorder.none,
-                //     ),
-                //     onChanged: (String? newValue) {
-                //       // setState();
-                //     },
-                //   ),
-                // ),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
