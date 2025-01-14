@@ -152,6 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
           : _dateOfBirthController.text;
       if (selectedProfile == "Student") {
         String registerStudentUrl = "http://127.0.0.1:8000/students/";
+        var classroomId = int.parse(selectedClassroom!); //retrieve classroom id
         var data = {
           "firstName": _firstnameController.text,
           "lastName": _lastnameController.text,
@@ -160,7 +161,7 @@ class _RegisterPageState extends State<RegisterPage> {
           "address": _addressController.text,
           "phoneNumber": _phoneNumberController.text,
           "email": _emailController.text,
-          "classroom": _classroomController.text
+          "classroom_id": classroomId,
         };
         try {
           var response = await http.post(Uri.parse(registerStudentUrl),
@@ -168,6 +169,9 @@ class _RegisterPageState extends State<RegisterPage> {
               body: json.encode(data));
           print(response.reasonPhrase);
           print(response.statusCode);
+          if (response.statusCode == 200) {
+            _formKey.currentState!.reset();
+          }
         } catch (e) {
           print(e);
         }
@@ -190,6 +194,9 @@ class _RegisterPageState extends State<RegisterPage> {
               body: json.encode(data));
           print(response.reasonPhrase);
           print(response.statusCode);
+          if (response.statusCode == 200) {
+            _formKey.currentState!.reset();
+          }
         } catch (e) {
           print(e);
         }
@@ -211,6 +218,9 @@ class _RegisterPageState extends State<RegisterPage> {
               body: json.encode(data));
           print(response.reasonPhrase);
           print(response.statusCode);
+          if (response.statusCode == 200) {
+            _formKey.currentState!.reset();
+          }
         } catch (e) {
           print(e);
         }
@@ -281,24 +291,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
                   },
                 ),
-                // SizedBox(
-                //   width: 200,
-                //   child: DropdownButtonFormField<String>(
-                //     value: selectedClassroom,
-                //     items: [
-                //       for (String profile in _RegisterPageState.profiles)
-                //         DropdownMenuItem(value: profile, child: Text("$profile"))
-                //     ],
-                //     decoration: InputDecoration(
-                //       filled: true,
-                //       fillColor: Colors.grey[200],
-                //       border: InputBorder.none,
-                //     ),
-                //     onChanged: (String? newValue) {
-                //       // setState();
-                //     },
-                //   ),
-                // ),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
