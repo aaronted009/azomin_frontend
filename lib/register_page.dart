@@ -152,6 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
           : _dateOfBirthController.text;
       if (selectedProfile == "Student") {
         String registerStudentUrl = "http://127.0.0.1:8000/students/";
+        var classroomId = int.parse(selectedClassroom!); //retrieve classroom id
         var data = {
           "firstName": _firstnameController.text,
           "lastName": _lastnameController.text,
@@ -160,7 +161,7 @@ class _RegisterPageState extends State<RegisterPage> {
           "address": _addressController.text,
           "phoneNumber": _phoneNumberController.text,
           "email": _emailController.text,
-          "classroom": _classroomController.text
+          "classroom_id": classroomId,
         };
         try {
           var response = await http.post(Uri.parse(registerStudentUrl),
