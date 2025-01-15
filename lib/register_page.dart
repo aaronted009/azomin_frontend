@@ -28,13 +28,13 @@ class _RegisterPageState extends State<RegisterPage> {
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
   String selectedProfile = profiles.elementAt(1);
 
-  @override
-  void initState() {
-    super.initState();
-    if (selectedProfile == "Teacher") {
-      correspondingFields = TeacherSpecificFields;
-    }
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (selectedProfile == "Teacher") {
+  //     correspondingFields = TeacherSpecificFields;
+  //   }
+  // }
 
   List<Widget> correspondingFields = [];
 
@@ -65,62 +65,6 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   String? selectedStudent;
-
-  List<Widget> TeacherSpecificFields = [
-    Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyTextWidget("Hire date", 14, FontWeight.bold),
-                  SizedBox(
-                    width: 200,
-                    child: TextFormField(
-                      controller: _hireDateController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyTextWidget("Qualification", 14, FontWeight.bold),
-                  SizedBox(
-                    width: 200,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the qualification';
-                        }
-                        return null;
-                      },
-                      controller: _qualificationController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )),
-  ];
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -338,6 +282,75 @@ class _RegisterPageState extends State<RegisterPage> {
           ],
         ),
       )
+    ];
+
+    List<Widget> TeacherSpecificFields = [
+      Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 5.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MyTextWidget("Hire date", 14, FontWeight.bold),
+                    SizedBox(
+                      width: 200,
+                      child: TextFormField(
+                        controller: _hireDateController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          border: InputBorder.none,
+                          prefixIcon: const Icon(Icons.calendar_today),
+                        ),
+                        readOnly: true,
+                        onTap: () async {
+                          DateTime? date = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now());
+                          if (date != null) {
+                            _hireDateController.text =
+                                date.toString().split(" ")[0];
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 5.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MyTextWidget("Qualification", 14, FontWeight.bold),
+                    SizedBox(
+                      width: 200,
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the qualification';
+                          }
+                          return null;
+                        },
+                        controller: _qualificationController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )),
     ];
     return Scaffold(
       body: Row(mainAxisSize: MainAxisSize.max, children: [
@@ -650,7 +663,28 @@ class _RegisterPageState extends State<RegisterPage> {
                                                     filled: true,
                                                     fillColor: Colors.grey[200],
                                                     border: InputBorder.none,
+                                                    prefixIcon: const Icon(
+                                                        Icons.calendar_today),
                                                   ),
+                                                  readOnly: true,
+                                                  onTap: () async {
+                                                    DateTime? date =
+                                                        await showDatePicker(
+                                                            context: context,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            firstDate:
+                                                                DateTime(1900),
+                                                            lastDate:
+                                                                DateTime.now());
+                                                    if (date != null) {
+                                                      _dateOfBirthController
+                                                              .text =
+                                                          date
+                                                              .toString()
+                                                              .split(" ")[0];
+                                                    }
+                                                  },
                                                 ),
                                               ),
                                             ],
