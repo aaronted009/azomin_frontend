@@ -20,10 +20,8 @@ class _RegisterPageState extends State<RegisterPage> {
   static final _addressController = TextEditingController();
   static final _dateOfBirthController = TextEditingController();
   static final _phoneNumberController = TextEditingController();
-  static final _classroomController = TextEditingController();
   static final _hireDateController = TextEditingController();
   static final _qualificationController = TextEditingController();
-  static final _studentController = TextEditingController();
   static const List<String> genders = ["Male", "Female"];
   String? _selectedGender = genders.first;
 
@@ -33,13 +31,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    // if (selectedProfile == "Student") {
-    //   correspondingFields = StudentSpecificFields;
-    // } else
     if (selectedProfile == "Teacher") {
       correspondingFields = TeacherSpecificFields;
-    } else if (selectedProfile == "Tutor") {
-      correspondingFields = StudentTutorSpecificFields;
     }
   }
 
@@ -59,33 +52,20 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String? selectedClassroom;
 
-  List<Widget> StudentTutorSpecificFields = [
-    Padding(
-      padding: EdgeInsets.all(20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MyTextWidget("Student", 14, FontWeight.bold),
-              SizedBox(
-                width: 400,
-                child: TextFormField(
-                  controller: _studentController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: InputBorder.none,
-                  ),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    )
-  ];
+  Future fetchStudents() async {
+    var students = [];
+    try {
+      var response =
+          await http.get(Uri.parse("http://127.0.0.1:8000/students/"));
+      students = json.decode(response.body);
+    } catch (e) {
+      print(e);
+    }
+    return students;
+  }
+
+  String? selectedStudent;
+
   List<Widget> TeacherSpecificFields = [
     Padding(
         padding: EdgeInsets.all(20.0),
@@ -202,6 +182,7 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       } else if (selectedProfile == "Tutor") {
         String registerTutorUrl = "http://127.0.0.1:8000/student_tutors/";
+        var studentId = int.parse(selectedStudent!); //retrieve student id
         var data = {
           "firstName": _firstnameController.text,
           "lastName": _lastnameController.text,
@@ -210,7 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
           "address": _addressController.text,
           "phoneNumber": _phoneNumberController.text,
           "email": _emailController.text,
-          "student": _studentController.text,
+          "student_id": studentId,
         };
         try {
           var response = await http.post(Uri.parse(registerTutorUrl),
@@ -237,10 +218,8 @@ class _RegisterPageState extends State<RegisterPage> {
     _addressController.dispose();
     _dateOfBirthController.dispose();
     _phoneNumberController.dispose();
-    _classroomController.dispose();
     _hireDateController.dispose();
     _qualificationController.dispose();
-    _studentController.dispose();
     super.dispose();
   }
 
@@ -299,6 +278,60 @@ class _RegisterPageState extends State<RegisterPage> {
                     );
                   },
                   child: MyTextWidget("Add", 14, FontWeight.bold),
+                ),
+              ],
+            )
+          ],
+        ),
+      )
+    ];
+
+    List<Widget> StudentTutorSpecificFields = [
+      Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MyTextWidget("Student", 14, FontWeight.bold),
+                FutureBuilder(
+                  future: fetchStudents(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      var students = snapshot.data as List;
+                      return SizedBox(
+                        width: 400,
+                        child: DropdownButtonFormField<String>(
+                          value: selectedStudent,
+                          items:
+                              students.map<DropdownMenuItem<String>>((student) {
+                            return DropdownMenuItem<String>(
+                              value: student['id'].toString(),
+                              child: Text(student['firstName'] +
+                                  " " +
+                                  student['lastName']),
+                            );
+                          }).toList(),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedStudent = newValue!;
+                            });
+                          },
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             )
