@@ -28,14 +28,6 @@ class _RegisterPageState extends State<RegisterPage> {
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
   String selectedProfile = profiles.elementAt(1);
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   if (selectedProfile == "Teacher") {
-  //     correspondingFields = TeacherSpecificFields;
-  //   }
-  // }
-
   List<Widget> correspondingFields = [];
 
   Future fetchClassrooms() async {
@@ -352,6 +344,15 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           )),
     ];
+
+    //Initializing the corresponding fields
+    if (correspondingFields.isEmpty) {
+      correspondingFields = selectedProfile == profiles.first
+          ? StudentSpecificFields
+          : selectedProfile == profiles.elementAt(1)
+              ? TeacherSpecificFields
+              : StudentTutorSpecificFields;
+    }
     return Scaffold(
       body: Row(mainAxisSize: MainAxisSize.max, children: [
         Expanded(
