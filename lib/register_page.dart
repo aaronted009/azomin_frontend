@@ -28,14 +28,6 @@ class _RegisterPageState extends State<RegisterPage> {
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
   String selectedProfile = profiles.elementAt(1);
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   if (selectedProfile == "Teacher") {
-  //     correspondingFields = TeacherSpecificFields;
-  //   }
-  // }
-
   List<Widget> correspondingFields = [];
 
   Future fetchClassrooms() async {
@@ -74,7 +66,7 @@ class _RegisterPageState extends State<RegisterPage> {
       var dateOfBirth = _dateOfBirthController.text == ""
           ? null
           : _dateOfBirthController.text;
-      if (selectedProfile == "Student") {
+      if (selectedProfile == profiles.first) {
         String registerStudentUrl = "http://127.0.0.1:8000/students/";
         var classroomId = int.parse(selectedClassroom!); //retrieve classroom id
         var data = {
@@ -99,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
         } catch (e) {
           print(e);
         }
-      } else if (selectedProfile == "Teacher") {
+      } else if (selectedProfile == profiles.elementAt(1)) {
         String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
         var data = {
           "firstName": _firstnameController.text,
@@ -124,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
         } catch (e) {
           print(e);
         }
-      } else if (selectedProfile == "Tutor") {
+      } else if (selectedProfile == profiles.elementAt(2)) {
         String registerTutorUrl = "http://127.0.0.1:8000/student_tutors/";
         var studentId = int.parse(selectedStudent!); //retrieve student id
         var data = {
@@ -352,6 +344,15 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           )),
     ];
+
+    //Initializing the corresponding fields
+    if (correspondingFields.isEmpty) {
+      correspondingFields = selectedProfile == profiles.first
+          ? StudentSpecificFields
+          : selectedProfile == profiles.elementAt(1)
+              ? TeacherSpecificFields
+              : StudentTutorSpecificFields;
+    }
     return Scaffold(
       body: Row(mainAxisSize: MainAxisSize.max, children: [
         Expanded(
@@ -449,15 +450,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                             setState(() {
                                               selectedProfile = newValue!;
                                               if (selectedProfile ==
-                                                  "Student") {
+                                                  profiles.first) {
                                                 correspondingFields =
                                                     StudentSpecificFields;
                                               } else if (selectedProfile ==
-                                                  "Teacher") {
+                                                  profiles.elementAt(1)) {
                                                 correspondingFields =
                                                     TeacherSpecificFields;
                                               } else if (selectedProfile ==
-                                                  "Tutor") {
+                                                  profiles.elementAt(2)) {
                                                 correspondingFields =
                                                     StudentTutorSpecificFields;
                                               }
