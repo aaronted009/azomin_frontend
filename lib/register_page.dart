@@ -86,7 +86,12 @@ class _RegisterPageState extends State<RegisterPage> {
           print(response.reasonPhrase);
           print(response.statusCode);
           if (response.statusCode == 200) {
-            _formKey.currentState!.reset();
+            _firstnameController.clear();
+            _lastnameController.clear();
+            _emailController.clear();
+            _addressController.clear();
+            _dateOfBirthController.clear();
+            _phoneNumberController.clear();
           }
         } catch (e) {
           print(e);
@@ -136,7 +141,12 @@ class _RegisterPageState extends State<RegisterPage> {
           print(response.reasonPhrase);
           print(response.statusCode);
           if (response.statusCode == 200) {
-            _formKey.currentState!.reset();
+            _firstnameController.clear();
+            _lastnameController.clear();
+            _emailController.clear();
+            _addressController.clear();
+            _dateOfBirthController.clear();
+            _phoneNumberController.clear();
           }
         } catch (e) {
           print(e);
@@ -201,6 +211,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               selectedClassroom = newValue!;
                             });
                           },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a classroom';
+                            }
+                            return null;
+                          },
                         ),
                       );
                     }
@@ -263,6 +279,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             setState(() {
                               selectedStudent = newValue!;
                             });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a student';
+                            }
+                            return null;
                           },
                         ),
                       );
