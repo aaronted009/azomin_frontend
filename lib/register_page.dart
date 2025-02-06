@@ -1,9 +1,11 @@
 import 'package:azomin_frontend/add_classroom.dart';
 import 'package:azomin_frontend/login_page.dart';
 import 'package:azomin_frontend/utils.dart';
+import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:delightful_toast/delight_toast.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -58,103 +60,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String? selectedStudent;
 
-  void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      // Handle date format variables
-      var hireDate =
-          _hireDateController.text == "" ? null : _hireDateController.text;
-      var dateOfBirth = _dateOfBirthController.text == ""
-          ? null
-          : _dateOfBirthController.text;
-      if (selectedProfile == profiles.first) {
-        String registerStudentUrl = "http://127.0.0.1:8000/students/";
-        var classroomId = int.parse(selectedClassroom!); //retrieve classroom id
-        var data = {
-          "firstName": _firstnameController.text,
-          "lastName": _lastnameController.text,
-          "dateOfBirth": dateOfBirth,
-          "gender": _selectedGender,
-          "address": _addressController.text,
-          "phoneNumber": _phoneNumberController.text,
-          "email": _emailController.text,
-          "classroom_id": classroomId,
-        };
-        try {
-          var response = await http.post(Uri.parse(registerStudentUrl),
-              headers: {'content-type': 'application/json'},
-              body: json.encode(data));
-          print(response.reasonPhrase);
-          print(response.statusCode);
-          if (response.statusCode == 200) {
-            _firstnameController.clear();
-            _lastnameController.clear();
-            _emailController.clear();
-            _addressController.clear();
-            _dateOfBirthController.clear();
-            _phoneNumberController.clear();
-          }
-        } catch (e) {
-          print(e);
-        }
-      } else if (selectedProfile == profiles.elementAt(1)) {
-        String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
-        var data = {
-          "firstName": _firstnameController.text,
-          "lastName": _lastnameController.text,
-          "dateOfBirth": dateOfBirth,
-          "gender": _selectedGender,
-          "address": _addressController.text,
-          "phoneNumber": _phoneNumberController.text,
-          "email": _emailController.text,
-          "hireDate": hireDate,
-          "qualification": _qualificationController.text,
-        };
-        try {
-          var response = await http.post(Uri.parse(registerTeacherUrl),
-              headers: {'content-type': 'application/json'},
-              body: json.encode(data));
-          print(response.reasonPhrase);
-          print(response.statusCode);
-          if (response.statusCode == 200) {
-            _formKey.currentState!.reset();
-          }
-        } catch (e) {
-          print(e);
-        }
-      } else if (selectedProfile == profiles.elementAt(2)) {
-        String registerTutorUrl = "http://127.0.0.1:8000/student_tutors/";
-        var studentId = int.parse(selectedStudent!); //retrieve student id
-        var data = {
-          "firstName": _firstnameController.text,
-          "lastName": _lastnameController.text,
-          "dateOfBirth": dateOfBirth,
-          "gender": _selectedGender,
-          "address": _addressController.text,
-          "phoneNumber": _phoneNumberController.text,
-          "email": _emailController.text,
-          "student_id": studentId,
-        };
-        try {
-          var response = await http.post(Uri.parse(registerTutorUrl),
-              headers: {'content-type': 'application/json'},
-              body: json.encode(data));
-          print(response.reasonPhrase);
-          print(response.statusCode);
-          if (response.statusCode == 200) {
-            _firstnameController.clear();
-            _lastnameController.clear();
-            _emailController.clear();
-            _addressController.clear();
-            _dateOfBirthController.clear();
-            _phoneNumberController.clear();
-          }
-        } catch (e) {
-          print(e);
-        }
-      }
-    }
-  }
-
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -171,6 +76,194 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    void _submitForm() async {
+      if (_formKey.currentState!.validate()) {
+        // Handle date format variables
+        var hireDate =
+            _hireDateController.text == "" ? null : _hireDateController.text;
+        var dateOfBirth = _dateOfBirthController.text == ""
+            ? null
+            : _dateOfBirthController.text;
+        if (selectedProfile == profiles.first) {
+          String registerStudentUrl = "http://127.0.0.1:8000/students/";
+          var classroomId =
+              int.parse(selectedClassroom!); //retrieve classroom id
+          var data = {
+            "firstName": _firstnameController.text,
+            "lastName": _lastnameController.text,
+            "dateOfBirth": dateOfBirth,
+            "gender": _selectedGender,
+            "address": _addressController.text,
+            "phoneNumber": _phoneNumberController.text,
+            "email": _emailController.text,
+            "classroom_id": classroomId,
+          };
+          try {
+            var response = await http.post(Uri.parse(registerStudentUrl),
+                headers: {'content-type': 'application/json'},
+                body: json.encode(data));
+            print(response.reasonPhrase);
+            print(response.statusCode);
+            if (response.statusCode == 200) {
+              DelightToastBar(
+                builder: (context) => const ToastCard(
+                  leading: Icon(
+                    Icons.check_outlined,
+                    size: 28,
+                  ),
+                  title: Text(
+                    "Student succesfully added",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ).show(context);
+              _firstnameController.clear();
+              _lastnameController.clear();
+              _emailController.clear();
+              _addressController.clear();
+              _dateOfBirthController.clear();
+              _phoneNumberController.clear();
+            }
+          } catch (e) {
+            DelightToastBar(
+              builder: (context) => const ToastCard(
+                leading: Icon(
+                  Icons.cancel_outlined,
+                  size: 28,
+                ),
+                title: Text(
+                  "There was an error registering the student. Please try again.",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ).show(context);
+            print(e);
+          }
+        } else if (selectedProfile == profiles.elementAt(1)) {
+          String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
+          var data = {
+            "firstName": _firstnameController.text,
+            "lastName": _lastnameController.text,
+            "dateOfBirth": dateOfBirth,
+            "gender": _selectedGender,
+            "address": _addressController.text,
+            "phoneNumber": _phoneNumberController.text,
+            "email": _emailController.text,
+            "hireDate": hireDate,
+            "qualification": _qualificationController.text,
+          };
+          try {
+            var response = await http.post(Uri.parse(registerTeacherUrl),
+                headers: {'content-type': 'application/json'},
+                body: json.encode(data));
+            print(response.reasonPhrase);
+            print(response.statusCode);
+            if (response.statusCode == 200) {
+              DelightToastBar(
+                builder: (context) => const ToastCard(
+                  leading: Icon(
+                    Icons.check_outlined,
+                    size: 28,
+                  ),
+                  title: Text(
+                    "Teacher succesfully added",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ).show(context);
+              _formKey.currentState!.reset();
+            }
+          } catch (e) {
+            DelightToastBar(
+              builder: (context) => const ToastCard(
+                leading: Icon(
+                  Icons.cancel_outlined,
+                  size: 28,
+                ),
+                title: Text(
+                  "There was an error registering the teacher. Please try again.",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ).show(context);
+            print(e);
+          }
+        } else if (selectedProfile == profiles.elementAt(2)) {
+          String registerTutorUrl = "http://127.0.0.1:8000/student_tutors/";
+          var studentId = int.parse(selectedStudent!); //retrieve student id
+          var data = {
+            "firstName": _firstnameController.text,
+            "lastName": _lastnameController.text,
+            "dateOfBirth": dateOfBirth,
+            "gender": _selectedGender,
+            "address": _addressController.text,
+            "phoneNumber": _phoneNumberController.text,
+            "email": _emailController.text,
+            "student_id": studentId,
+          };
+          try {
+            var response = await http.post(Uri.parse(registerTutorUrl),
+                headers: {'content-type': 'application/json'},
+                body: json.encode(data));
+            print(response.reasonPhrase);
+            print(response.statusCode);
+            if (response.statusCode == 200) {
+              DelightToastBar(
+                builder: (context) => const ToastCard(
+                  leading: Icon(
+                    Icons.check_outlined,
+                    size: 28,
+                  ),
+                  title: Text(
+                    "Tutor succesfully added",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ).show(context);
+              _firstnameController.clear();
+              _lastnameController.clear();
+              _emailController.clear();
+              _addressController.clear();
+              _dateOfBirthController.clear();
+              _phoneNumberController.clear();
+            }
+          } catch (e) {
+            DelightToastBar(
+              builder: (context) => const ToastCard(
+                leading: Icon(
+                  Icons.cancel_outlined,
+                  size: 28,
+                ),
+                title: Text(
+                  "There was an error registering the tutor. Please try again.",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ).show(context);
+            print(e);
+          }
+        }
+      }
+    }
+
     List<Widget> StudentSpecificFields = [
       Padding(
         padding: EdgeInsets.all(20.0),
