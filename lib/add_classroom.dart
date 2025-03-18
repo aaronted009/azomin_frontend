@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:azomin_frontend/utils.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:delightful_toast/toast/components/toast_card.dart';
+import 'package:delightful_toast/delight_toast.dart';
 
 class Classroom extends StatefulWidget {
   const Classroom({super.key});
@@ -33,8 +35,41 @@ class _ClassroomState extends State<Classroom> {
             body: json.encode(data));
         print(response.reasonPhrase);
         print(response.statusCode);
+        if (response.statusCode == 200) {
+          DelightToastBar(
+            builder: (context) => const ToastCard(
+              leading: Icon(
+                Icons.check_outlined,
+                size: 28,
+              ),
+              title: Text(
+                "Classroom succesfully added",
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ).show(context);
+          _classNameController.clear();
+        }
       } catch (e) {
         print(e);
+        DelightToastBar(
+          builder: (context) => const ToastCard(
+            leading: Icon(
+              Icons.cancel_outlined,
+              size: 28,
+            ),
+            title: Text(
+              "There was an error registering the student. Please try again.",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ).show(context);
       }
     }
   }
