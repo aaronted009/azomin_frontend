@@ -38,6 +38,8 @@ dependencies:
   http:
   get:
   delightful_toast: ^1.1.0
+  mailer: ^6.0.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:

@@ -168,6 +168,10 @@ class _RegisterPageState extends State<RegisterPage> {
             print(response.reasonPhrase);
             print(response.statusCode);
             if (response.statusCode == 200) {
+              await sendEmail(
+                  _firstnameController.text + " " + _lastnameController.text,
+                  _emailController.text,
+                  password);
               DelightToastBar(
                 builder: (context) => const ToastCard(
                   leading: Icon(
@@ -175,7 +179,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     size: 28,
                   ),
                   title: Text(
-                    "Teacher succesfully added",
+                    "Teacher succesfully added. Your ids has been mailed at your provided email address.",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
