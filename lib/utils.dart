@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class MyTextWidget extends StatelessWidget {
   final String text;
@@ -13,4 +14,12 @@ class MyTextWidget extends StatelessWidget {
       style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
     );
   }
+}
+
+String generateRandomPassword(int length) {
+  const String chars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&*()_+[]{}|;:,.<>?';
+  Random random = Random.secure();
+  return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+      .join();
 }

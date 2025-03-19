@@ -147,6 +147,8 @@ class _RegisterPageState extends State<RegisterPage> {
           }
         } else if (selectedProfile == profiles.elementAt(1)) {
           String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
+          // Generate password for teacher
+          var password = generateRandomPassword(12);
           var data = {
             "firstName": _firstnameController.text,
             "lastName": _lastnameController.text,
@@ -157,6 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
             "email": _emailController.text,
             "hireDate": hireDate,
             "qualification": _qualificationController.text,
+            "password": password,
           };
           try {
             var response = await http.post(Uri.parse(registerTeacherUrl),
