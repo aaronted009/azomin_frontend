@@ -16,14 +16,14 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  static final _firstnameController = TextEditingController();
-  static final _lastnameController = TextEditingController();
-  static final _emailController = TextEditingController();
-  static final _addressController = TextEditingController();
-  static final _dateOfBirthController = TextEditingController();
-  static final _phoneNumberController = TextEditingController();
-  static final _hireDateController = TextEditingController();
-  static final _qualificationController = TextEditingController();
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _dateOfBirthController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _hireDateController = TextEditingController();
+  final _qualificationController = TextEditingController();
   static const List<String> genders = ["Male", "Female"];
   String? _selectedGender = genders.first;
 

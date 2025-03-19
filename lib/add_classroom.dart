@@ -14,7 +14,7 @@ class Classroom extends StatefulWidget {
 
 class _ClassroomState extends State<Classroom> {
   final GlobalKey<FormState> _classroomFormKey = GlobalKey<FormState>();
-  static final _classNameController = TextEditingController();
+  final _classNameController = TextEditingController();
 
   @override
   void dispose() {
