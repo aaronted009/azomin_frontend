@@ -5,6 +5,7 @@ import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:developer';
 import 'package:delightful_toast/delight_toast.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -148,7 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
         } else if (selectedProfile == profiles.elementAt(1)) {
           String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
           // Generate password for teacher
-          var password = generateRandomPassword(12);
+          String password = PasswordUtils.generateRandomPassword(12);
           var data = {
             "firstName": _firstnameController.text,
             "lastName": _lastnameController.text,
@@ -168,10 +169,15 @@ class _RegisterPageState extends State<RegisterPage> {
             print(response.reasonPhrase);
             print(response.statusCode);
             if (response.statusCode == 200) {
-              await sendEmail(
-                  _firstnameController.text + " " + _lastnameController.text,
-                  _emailController.text,
-                  password);
+              print("Teacher created, now sending email");
+              try {
+                await EmailUtils.sendEmail(
+                    "${_firstnameController.text} ${_lastnameController.text}",
+                    "${_emailController.text}",
+                    password);
+              } catch (e) {
+                log("Error sending email: $e", name: "EmailUtils");
+              }
               DelightToastBar(
                 builder: (context) => const ToastCard(
                   leading: Icon(
@@ -205,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
             ).show(context);
-            print(e);
+            print("Error: $e ");
           }
         } else if (selectedProfile == profiles.elementAt(2)) {
           String registerTutorUrl = "http://127.0.0.1:8000/student_tutors/";
