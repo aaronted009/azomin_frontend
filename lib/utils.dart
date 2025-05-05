@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
-
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:mailer/mailer.dart';
@@ -10,12 +8,11 @@ import 'dart:developer' as developer;
 class EmailUtils {
   static Future<void> sendEmail(recipient_name, recipient_mail, info) async {
     await dotenv.load();
-    String username = dotenv.env['EMAIL_ADDRESS'] ?? '';
+    String username = dotenv.env['EMAIL_USERNAME'] ?? '';
     String password = dotenv.env['EMAIL_PASSWORD'] ?? '';
 
     developer.log('Email: $username');
     developer.log('Password: $password');
-    debugger();
 
     // Configure the SMTP server
     final smtpServer = gmail(username, password);
