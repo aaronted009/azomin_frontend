@@ -27,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _qualificationController = TextEditingController();
   static const List<String> genders = ["Male", "Female"];
   String? _selectedGender = genders.first;
+  bool _isSubmitting = false;
 
   static const List<String> profiles = ["Student", "Teacher", "Tutor"];
   String selectedProfile = profiles.elementAt(1);
@@ -78,7 +79,11 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     void _submitForm() async {
+      if (_isSubmitting) return; // Prevent multiple submissions
       if (_formKey.currentState!.validate()) {
+        setState(() {
+          _isSubmitting = true;
+        });
         // Handle date format variables
         var hireDate =
             _hireDateController.text == "" ? null : _hireDateController.text;
@@ -145,6 +150,10 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ).show(context);
             print(e);
+          } finally {
+            setState(() {
+              _isSubmitting = false;
+            });
           }
         } else if (selectedProfile == profiles.elementAt(1)) {
           String registerTeacherUrl = "http://127.0.0.1:8000/teachers/";
@@ -193,7 +202,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ).show(context);
-              _formKey.currentState!.reset();
+              _firstnameController.clear();
+              _lastnameController.clear();
+              _emailController.clear();
+              _addressController.clear();
+              _dateOfBirthController.clear();
+              _phoneNumberController.clear();
+              _hireDateController.clear();
+              _qualificationController.clear();
             }
           } catch (e) {
             DelightToastBar(
@@ -212,6 +228,10 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ).show(context);
             print("Error: $e ");
+          } finally {
+            setState(() {
+              _isSubmitting = false;
+            });
           }
         } else if (selectedProfile == profiles.elementAt(2)) {
           String registerTutorUrl = "http://127.0.0.1:8000/student_tutors/";
@@ -272,6 +292,10 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ).show(context);
             print(e);
+          } finally {
+            setState(() {
+              _isSubmitting = false;
+            });
           }
         }
       }
@@ -863,14 +887,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: SizedBox(
                                   width: 300,
                                   child: ElevatedButton(
-                                    onPressed: _submitForm,
+                                    onPressed:
+                                        _isSubmitting ? null : _submitForm,
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.grey[200],
                                       minimumSize: Size(double.infinity,
                                           50), // Set the height
                                     ),
-                                    child: const Text("Create account",
-                                        style: TextStyle(color: Colors.black)),
+                                    child: _isSubmitting
+                                        ? CircularProgressIndicator(
+                                            color: Colors.black)
+                                        : const Text("Create account",
+                                            style:
+                                                TextStyle(color: Colors.black)),
                                   ),
                                 ),
                               ),
