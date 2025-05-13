@@ -194,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     size: 28,
                   ),
                   title: Text(
-                    "Teacher succesfully added. Your ids has been mailed at your provided email address.",
+                    "Teacher successfully added. Your IDs have been mailed to your provided email address.",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
@@ -210,6 +210,26 @@ class _RegisterPageState extends State<RegisterPage> {
               _phoneNumberController.clear();
               _hireDateController.clear();
               _qualificationController.clear();
+            } else {
+              // Handle server-side errors
+              print("Response body: ${response.body}");
+              String errorMessage = json.decode(response.body)['detail'] ??
+                  "An error occurred while registering the teacher.";
+              DelightToastBar(
+                builder: (context) => ToastCard(
+                  leading: const Icon(
+                    Icons.error_outline,
+                    size: 28,
+                  ),
+                  title: Text(
+                    errorMessage,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ).show(context);
             }
           } catch (e) {
             DelightToastBar(
@@ -227,7 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
             ).show(context);
-            print("Error: $e ");
+            print("Error: $e");
           } finally {
             setState(() {
               _isSubmitting = false;
@@ -706,13 +726,76 @@ class _RegisterPageState extends State<RegisterPage> {
                                               SizedBox(
                                                 width: 200,
                                                 child: TextFormField(
-                                                  validator: (value) {
-                                                    if (value == null ||
-                                                        value.isEmpty) {
-                                                      return 'Please enter your mail';
-                                                    }
-                                                    return null;
-                                                  },
+                                                    validator: (value) {
+                                                      if (value == null || value.isEmpty) {
+                                                        return 'Please enter your mail';
+                                                      }
+                                                      // Perform basic email format validation
+                                                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                                        return 'Please enter a valid email address';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    onFieldSubmitted: (value) async {
+                                                      // Check if email already exists in the database asynchronously
+                                                      try {
+                                                        var response = await http.get(
+                                                          Uri.parse("http://127.0.0.1:8000/check_email?email=$value"),
+                                                        );
+                                                        if (response.statusCode == 200) {
+                                                          var exists = json.decode(response.body)['exists'];
+                                                          if (exists) {
+                                                            DelightToastBar(
+                                                              builder: (context) => const ToastCard(
+                                                                leading: Icon(
+                                                                  Icons.error_outline,
+                                                                  size: 28,
+                                                                ),
+                                                                title: Text(
+                                                                  "This email is already registered",
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.w700,
+                                                                    fontSize: 14,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ).show(context);
+                                                          }
+                                                        } else {
+                                                          DelightToastBar(
+                                                            builder: (context) => const ToastCard(
+                                                              leading: Icon(
+                                                                Icons.error_outline,
+                                                                size: 28,
+                                                              ),
+                                                              title: Text(
+                                                                "Error checking email. Please try again.",
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.w700,
+                                                                  fontSize: 14,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ).show(context);
+                                                        }
+                                                      } catch (e) {
+                                                        DelightToastBar(
+                                                          builder: (context) => const ToastCard(
+                                                            leading: Icon(
+                                                              Icons.error_outline,
+                                                              size: 28,
+                                                            ),
+                                                            title: Text(
+                                                              "Error connecting to the server. Please try again.",
+                                                              style: TextStyle(
+                                                                fontWeight: FontWeight.w700,
+                                                                fontSize: 14,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ).show(context);
+                                                      }
+                                                    },
                                                   controller: _emailController,
                                                   decoration: InputDecoration(
                                                     filled: true,
