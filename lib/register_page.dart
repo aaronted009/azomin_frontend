@@ -86,22 +86,22 @@ class _RegisterPageState extends State<RegisterPage> {
         });
         // Handle date format variables
         var hireDate =
-            _hireDateController.text == "" ? null : _hireDateController.text;
-        var dateOfBirth = _dateOfBirthController.text == ""
+            _hireDateController.text.trim() == "" ? null : _hireDateController.text.trim();
+        var dateOfBirth = _dateOfBirthController.text.trim() == ""
             ? null
-            : _dateOfBirthController.text;
+            : _dateOfBirthController.text.trim();
         if (selectedProfile == profiles.first) {
           String registerStudentUrl = "http://127.0.0.1:8000/students/";
           var classroomId =
               int.parse(selectedClassroom!); //retrieve classroom id
           var data = {
-            "firstName": _firstnameController.text,
-            "lastName": _lastnameController.text,
+            "firstName": _firstnameController.text.trim(),
+            "lastName": _lastnameController.text.trim(),
             "dateOfBirth": dateOfBirth,
             "gender": _selectedGender,
-            "address": _addressController.text,
-            "phoneNumber": _phoneNumberController.text,
-            "email": _emailController.text,
+            "address": _addressController.text.trim(),
+            "phoneNumber": _phoneNumberController.text.trim(),
+            "email": _emailController.text.trim(),
             "classroom_id": classroomId,
           };
           try {
@@ -160,15 +160,15 @@ class _RegisterPageState extends State<RegisterPage> {
           // Generate password for teacher
           String password = PasswordUtils.generateRandomPassword(12);
           var data = {
-            "firstName": _firstnameController.text,
-            "lastName": _lastnameController.text,
+            "firstName": _firstnameController.text.trim(),
+            "lastName": _lastnameController.text.trim(),
             "dateOfBirth": dateOfBirth,
             "gender": _selectedGender,
-            "address": _addressController.text,
-            "phoneNumber": _phoneNumberController.text,
-            "email": _emailController.text,
+            "address": _addressController.text.trim(),
+            "phoneNumber": _phoneNumberController.text.trim(),
+            "email": _emailController.text.trim(),
             "hireDate": hireDate,
-            "qualification": _qualificationController.text,
+            "qualification": _qualificationController.text.trim(),
             "password": password,
           };
           try {
@@ -181,8 +181,8 @@ class _RegisterPageState extends State<RegisterPage> {
               print("Teacher created, now sending email");
               try {
                 await EmailUtils.sendEmail(
-                    "${_firstnameController.text} ${_lastnameController.text}",
-                    "${_emailController.text}",
+                    "${_firstnameController.text.trim()} ${_lastnameController.text.trim()}",
+                    "${_emailController.text.trim()}",
                     password);
               } catch (e) {
                 log("Error sending email: $e", name: "EmailUtils");
@@ -257,13 +257,13 @@ class _RegisterPageState extends State<RegisterPage> {
           String registerTutorUrl = "http://127.0.0.1:8000/student_tutors/";
           var studentId = int.parse(selectedStudent!); //retrieve student id
           var data = {
-            "firstName": _firstnameController.text,
-            "lastName": _lastnameController.text,
+            "firstName": _firstnameController.text.trim(),
+            "lastName": _lastnameController.text.trim(),
             "dateOfBirth": dateOfBirth,
             "gender": _selectedGender,
-            "address": _addressController.text,
-            "phoneNumber": _phoneNumberController.text,
-            "email": _emailController.text,
+            "address": _addressController.text.trim(),
+            "phoneNumber": _phoneNumberController.text.trim(),
+            "email": _emailController.text.trim(),
             "student_id": studentId,
           };
           try {
